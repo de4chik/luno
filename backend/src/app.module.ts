@@ -19,6 +19,7 @@ import { JwtModule } from '@nestjs/jwt';
     TokensModule,
     JwtModule.register({
       global: true,
+      secretOrPrivateKey: process.env.SECRET_JWT_KEY
     }),
   ],
   controllers: [],

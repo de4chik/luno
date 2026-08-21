@@ -80,7 +80,7 @@ export class AuthService {
       secure: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-    return res.json({ user });
+    return res.json({ user, accessToken: tokens.accessToken });
   }
 
   async refresh(req: Request, res: Response) {

@@ -11,12 +11,15 @@ export class UserService {
       data: userDto,
     });
   }
+
   async getAll() {
     return await this.prisma.user.findMany();
   }
+
   async getById(id: string) {
     return await this.prisma.user.findUnique({ where: { id } });
   }
+
   async getByEmail(email: string) {
     return await this.prisma.user.findUnique({
       where: { email },
