@@ -1,0 +1,96 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Category {
+  id          String    @id @unique @default(uuid())
+  // 
+  name        String    @unique
+  description String?
+  products    Product[]
+  // 
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("category")
+}
+
+model Brand {
+  id        String    @id @unique @default(uuid())
+  // 
+  name      String    @unique
+  logotype  String
+  products  Product[]
+  // 
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  @@map("brand")
+}
+
+model Product {
+  id          String   @id @unique @default(uuid())
+  // 
+  name        String
+  description String
+  price       Float
+  brandId     String   @map("brand_id")
+  categoryId  String   @map("category_id")
+  brand       Brand    @relation(fields: [brandId], references: [id])
+  category    Category @relation(fields: [categoryId], references: [id])
+  gender      Gender
+  color       String
+  sku         String   @unique
+  images      String[]
+  // 
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("product")
+}
+
+enum Gender {
+  MAN
+  WOMAN
+  KIDS
+}
+
+model User {
+  id        String   @id @unique @default(uuid())
+  // 
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(USER)
+  tokens    Tokens[]
+  // 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("user")
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model Tokens {
+  id           String   @id @unique @default(uuid())
+  // 
+  accessToken  String   @unique @map("access_token")
+  refreshToken String   @unique @map("refresh_token")
+  userId       String   @map("user_id")
+  user         User     @relation(fields: [userId], references: [id])
+  // 
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("tokens")
+}
